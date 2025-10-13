@@ -13,28 +13,37 @@ struct TreeNode
     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}
 };
 
+//一种通用的迭代遍历方法   标记法
 class Solution {
 public:
     vector<int> preorderTraversal(TreeNode* root) {
         vector<int> res;
-        stack<TreeNode*> st;
+        stack<pair<TreeNode*,bool>> st;
         if (!root)
         {
             return res;
         }
-        st.push(root);
+        st.push(make_pair(root,false));//false表示该节点还未被处理
         while (!st.empty())
         {
-            TreeNode* node = st.top();
+            TreeNode* node = st.top().first;
+            bool flag = st.top().second;
             st.pop();
-            res.push_back(node->val);//前
-            if (node->right)
+            if (flag)//该节点已经被处理
             {
-                st.push(node->right);//右 后出先入
+                res.push_back(node->val);
             }
-            if (node->left)
+            else//该节点还未被处理
             {
-                st.push(node->left);
+                if (node->right)//右
+                {
+                    st.push(make_pair(node->right,false));
+                }
+                if (node->left)//左
+                {
+                    st.push(make_pair(node->left,false));
+                }
+                st.push(make_pair(node,true));//中   标记该节点已经被处理
             }
         }
         return res;
