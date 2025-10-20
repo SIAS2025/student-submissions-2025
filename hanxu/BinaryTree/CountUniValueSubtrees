@@ -1,0 +1,44 @@
+/**
+ * Given the root of a binary tree, return the number of uni-value subtrees.
+ * A uni-value subtree means all nodes of the subtree have the same value.
+**/
+/**
+ * Definition for a binary tree node.
+ * struct TreeNode {
+ *     int val;
+ *     TreeNode *left;
+ *     TreeNode *right;
+ *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}
+ * };
+ */
+class Solution {
+    bool isUnivalSubtree(TreeNode* root, int &cnt){
+        if(!root)
+            return true;
+        
+        if(!root->left && !root->right){
+            ++cnt;
+            return true;
+        }
+        bool left = isUnivalSubtree(root->left, cnt);
+        bool right = isUnivalSubtree(root->right, cnt);
+        if(!left || !right)
+            return false;
+        if(root->left && root->left->val!=root->val)
+            return false;
+        if(root->right && root->right->val!=root->val)
+            return false;
+        
+        ++cnt;
+        return true;
+    }
+public:
+    int countUnivalSubtrees(TreeNode* root) {
+        if(!root)
+            return 0;
+        
+        int res=0;
+        isUnivalSubtree(root, res);
+        return res;
+    }
+};
