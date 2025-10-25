@@ -1,0 +1,50 @@
+struct TrieNode {
+    int valSum;
+    TrieNode* children[26];
+    TrieNode() {
+        valSum = 0;
+        fill(children, children+26, nullptr);
+    }
+};
+class MapSum {
+    unordered_map<string, int> _vals;
+    TrieNode* _root;
+public:
+    MapSum() {
+        _root = new TrieNode();
+    }
+    
+    void insert(const string key, const int val) {
+        const int old_val = _vals.count(key)? _vals[key]:0;
+        TrieNode* node = _root;
+        for(auto &c:key) {
+            const int index = c - 'a';
+            if(!node->children[index]) {
+                node->children[index] = new TrieNode();
+            }
+            node = node->children[index];
+            node->valSum -= old_val;
+            node->valSum += val;
+        }
+        _vals[key] = val;
+    }
+    
+    int sum(const string prefix) {
+        TrieNode* node = _root;
+        for(auto &c:prefix) {
+            const int index = c - 'a';
+            if(!node->children[index]) {
+                return 0;
+            }
+            node = node->children[index];
+        }
+        return node->valSum;
+    }
+};
+
+/**
+ * Your MapSum object will be instantiated and called as such:
+ * MapSum* obj = new MapSum();
+ * obj->insert(key,val);
+ * int param_2 = obj->sum(prefix);
+ */
