@@ -1,0 +1,53 @@
+struct TrieNode {
+    bool endBy;
+    TrieNode* children[26];
+    TrieNode() {
+        endBy = false;
+        fill(children, children+26, nullptr);
+    }
+};
+class Trie {
+    TrieNode* _root;
+    TrieNode* scan(const string txt, const bool allowInsert) {
+        TrieNode* node = _root;
+        for(auto &c:txt) {
+            const int index = c - 'a';
+            if(!node->children[index]) {
+                if(allowInsert) {
+                    node->children[index] = new TrieNode();
+                } else {
+                    return nullptr;
+                }
+            }
+            node = node->children[index];
+        }
+        return node;
+    }
+public:
+    Trie() {
+        _root = new TrieNode();
+    }
+    
+    void insert(const string word) {
+        TrieNode* node = scan(word, true);
+        node->endBy = true;
+    }
+    
+    bool search(const string word) {
+        TrieNode* node = scan(word, false);
+        return node?node->endBy:false;
+    }
+    
+    bool startsWith(const string prefix) {
+        TrieNode* node = scan(prefix, false);
+        return node?true:false;
+    }
+};
+
+/**
+ * Your Trie object will be instantiated and called as such:
+ * Trie* obj = new Trie();
+ * obj->insert(word);
+ * bool param_2 = obj->search(word);
+ * bool param_3 = obj->startsWith(prefix);
+ */
