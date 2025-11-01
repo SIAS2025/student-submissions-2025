@@ -1,0 +1,68 @@
+struct TrieNode {
+    bool endBy;
+    TrieNode* nexts[26];
+    TrieNode() {
+        endBy = false;
+        fill(nexts, nexts+26, nullptr);
+    }
+};
+class TrieTree {
+    TrieNode* _root = new TrieNode();
+public:
+    void insert(const string derivative) {
+        TrieNode* node = _root;
+        for(auto &c:derivative) {
+            const int index = c - 'a';
+            if(!node->nexts[index]) {
+                node->nexts[index] = new TrieNode();
+            }
+            node = node->nexts[index];
+        }
+        node->endBy=true;
+    }
+    
+    string search(const string word) {
+        string res = "";
+        TrieNode* node= _root;
+        for(auto &c:word) {
+            const int index = c - 'a';
+            if(node->endBy) {
+                return res;
+            }
+            if(!node->nexts[index]) {
+                return word;
+            }
+            node = node->nexts[index];
+            res += c;
+        }
+        if(node->endBy) {
+            return res;
+        } else {
+            return word;
+        }
+    }
+};
+class Solution {
+public:
+    string replaceWords(vector<string>& dictionary, string sentence) {
+        string res = "", seg = "";
+        TrieTree tree;
+        for(auto &d:dictionary) {
+            tree.insert(d);
+        }
+        if(sentence.back()!=' ') {
+            sentence+= ' ';
+        }
+        for(auto &c:sentence) {
+            if(c==' ') {
+                res += tree.search(seg);
+                res += ' ';
+                seg = "";
+                continue;
+            }
+            seg += c;
+        }
+        res.pop_back();
+        return res;
+    }
+};
