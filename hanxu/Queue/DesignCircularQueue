@@ -1,0 +1,66 @@
+class MyCircularQueue {
+    int* _data;
+    int _capacity;
+    int _head = 0;
+    int _size = 0;
+public:
+    MyCircularQueue(const int k) {
+        _capacity = k;
+        _data = new int[k];
+        fill(_data, _data+k, -1);
+    }
+    
+    bool enQueue(int value) {
+        if(isFull()) {
+            return false;
+        }
+        ++_size;
+        _data[(_head+_size-1)%_capacity]=value;
+        return true;
+    }
+    
+    bool deQueue() {
+        if(isEmpty()) {
+            return false;
+        }
+        _data[_head]=-1;
+        _head++;
+        _head %= _capacity;
+        --_size;
+        return true;
+    }
+    
+    int Front() {
+        if(isEmpty()) {
+            return -1;
+        }
+        return _data[_head];
+    }
+    
+    int Rear() {
+        if(isEmpty()) {
+            return -1;
+        }
+        
+        return _data[(_head + _size -1)%_capacity];
+    }
+    
+    bool isEmpty() {
+        return _size == 0;
+    }
+    
+    bool isFull() {
+        return _size == _capacity;
+    }
+};
+
+/**
+ * Your MyCircularQueue object will be instantiated and called as such:
+ * MyCircularQueue* obj = new MyCircularQueue(k);
+ * bool param_1 = obj->enQueue(value);
+ * bool param_2 = obj->deQueue();
+ * int param_3 = obj->Front();
+ * int param_4 = obj->Rear();
+ * bool param_5 = obj->isEmpty();
+ * bool param_6 = obj->isFull();
+ */
