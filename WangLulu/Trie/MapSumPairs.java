@@ -25,6 +25,7 @@ public class MapSumPairs {
             cur = cur.children[index];
             cur.sum +=delta;
         }
+        
     }
     
     public int sum(String prefix) {
