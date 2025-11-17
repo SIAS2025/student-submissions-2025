@@ -1,0 +1,45 @@
+class Solution {
+    void bfs(vector<vector<char>>& grid, int r, int c) {
+        const int n = grid.size(), m = grid[0].size();
+        queue<pair<int,int>> to_process;
+        to_process.push({r, c});
+        grid[r][c]='0';
+        
+        while(!to_process.empty()) {
+            auto cur = to_process.front();
+            to_process.pop();
+            for(int new_r = cur.first-1;new_r<=cur.first+1;++new_r) {
+                for(int new_c = cur.second-1;new_c<=cur.second+1;++new_c) {
+                    if (abs(new_r -cur.first) + abs(new_c - cur.second)!=1) {
+                        continue;
+                    }
+                    if (new_r <0 || new_c<0 || new_r >=n || new_c >=m || grid[new_r][new_c]=='0') {
+                        continue;
+                    }
+                    
+                    grid[new_r][new_c]='0';
+                    to_process.push({new_r, new_c});
+                }
+            }
+        }
+    }
+public:
+    int numIslands(vector<vector<char>>& grid) {
+        const int n = grid.size();
+        if (n==0) {
+            return 0;
+        }
+        const int m = grid[0].size();
+        int res = 0;
+        for(int i=0;i<n;++i) {
+            for(int j=0;j<m;++j) {
+                if (grid[i][j]=='1') {
+                    bfs(grid, i, j);
+                    //cout<<i<<","<<j<<endl;
+                    res++;
+                }
+            }
+        }
+        return res;
+    }
+};
