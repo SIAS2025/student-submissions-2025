@@ -1,0 +1,32 @@
+class Solution {
+public:
+    // [73,74,75,71,69,72,76,73]
+    // 0, stack 73, 
+    // 1, top 73 compare 74, put 1 in ans, stack 74
+    // 2, top 74 compare 75, put 1 in ans, stack 75
+    // 3, top 75 compare 71, stack [75, 71]
+    // 4, top 71 compare 69, stack [75, 71, 69]
+    // 5, top 69 compare 72, put day diff (72, 69) -> ans, top 71 compare 72, put day diff (72, 71)->ans, stack [75, 72]
+    // 6, top 72 compare 76, put day diff(76, 72) -> ans, top 75 compare 76, put day diff (76, 75)->ans, stack [76]
+    // 7, top 76 compare 73, stack [76, 73]
+    vector<int> dailyTemperatures(vector<int>& temperatures) {
+        const int n = temperatures.size();
+        vector<int> ans(n);
+        stack<int> prev_temp;
+        
+        for(int i=0;i<n;++i) {
+            if(prev_temp.empty() || temperatures[prev_temp.top()] >= temperatures[i]) {
+                prev_temp.push(i);
+            } else {
+                while(!prev_temp.empty() && temperatures[prev_temp.top()] < temperatures[i]) {
+                    int day_id = prev_temp.top();
+                    prev_temp.pop();
+                    ans[day_id] = i - day_id;
+                }
+            }
+            prev_temp.push(i);
+        }
+        
+        return ans;
+    }
+};
