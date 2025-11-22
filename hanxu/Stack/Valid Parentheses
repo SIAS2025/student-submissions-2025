@@ -1,0 +1,25 @@
+class Solution {
+    inline static unordered_map<char, char> brackets = {{'(',')'}, {'[',']'}, {'{','}'}};
+public:
+    bool isValid(string s) {
+        if (s.size()&1) {
+            return false;
+        }
+        stack<char> prev;
+        for(char &c:s) {
+            if(brackets.count(c)) {
+                prev.push(c);
+            } else {
+                if (prev.empty()) {
+                    return false;
+                }
+                char ob = prev.top();
+                if (brackets[ob]!=c) {
+                    return false;
+                }
+                prev.pop();
+            }
+        }
+        return prev.empty();
+    }
+};
