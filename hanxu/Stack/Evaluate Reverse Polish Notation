@@ -1,0 +1,24 @@
+class Solution {
+    inline static const unordered_set<string> operators = {"+", "-", "*", "/"};
+public:
+    int evalRPN(vector<string>& tokens) {
+        stack<int> computed;
+        for(auto &t:tokens) {
+            if (operators.count(t)) {
+                int num1 = computed.top();
+                computed.pop();
+                int num2 = computed.top();
+                computed.pop();
+                switch(t[0]) {
+                    case '+': computed.push(num2+num1); break;
+                    case '-': computed.push(num2-num1); break;
+                    case '*': computed.push(num2*num1); break;
+                    case '/': computed.push(num2/num1);
+                }
+            } else {
+                computed.push(stoi(t));
+            }
+        }
+        return computed.top();
+    }
+};
