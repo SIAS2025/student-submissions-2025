@@ -1,0 +1,53 @@
+// [-2],[0],[-3]
+// -2 -> _vals=[-2],      _minVals[-2]
+// -2 -> _vals=[-2, -2]   _minVals[-2, -2]
+//  0 -> _vals=[-2, 0],   _minVals[-2]
+//.-3 -> _vals=[-2, 0, -3]_minVals[-3]
+class MinStack {
+    stack<int> _vals;
+    stack<int> _minVals;
+public:
+    MinStack() {
+    }
+    
+    void push(const int val) {
+        _vals.push(val);
+        if (_minVals.empty() || _minVals.top()>=val) {
+            _minVals.push(val);
+        }
+    }
+    
+    void pop() {
+        if(_vals.empty()) {
+            return;
+        }
+        int popped = _vals.top();
+        _vals.pop();
+        if(_minVals.top()==popped) {
+            _minVals.pop();
+        }
+    }
+    
+    int top() {
+        if (_vals.empty()) {
+            return -1;
+        }
+        return _vals.top();
+    }
+    
+    int getMin() {
+        if (_minVals.empty()) {
+            return -1;
+        }
+        return _minVals.top();
+    }
+};
+
+/**
+ * Your MinStack object will be instantiated and called as such:
+ * MinStack* obj = new MinStack();
+ * obj->push(val);
+ * obj->pop();
+ * int param_3 = obj->top();
+ * int param_4 = obj->getMin();
+ */
