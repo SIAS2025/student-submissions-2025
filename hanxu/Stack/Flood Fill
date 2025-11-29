@@ -1,0 +1,37 @@
+class Solution {
+    void dfs(vector<vector<int>> &image, int r, int c, int origin_color, int color) {
+        const int n = image.size(), m = image[0].size();
+        if (r<0 || r>=n || c<0 || c>=m || image[r][c]!=origin_color) {
+            return;
+        }
+        
+        image[r][c] = color;
+        for(int new_r = r-1;new_r<=r+1;new_r++) {
+            for(int new_c = c-1;new_c<=c+1;new_c++) {
+                if (abs(new_r -r) + abs(new_c-c)!=1) {
+                    continue;
+                }
+
+                dfs(image, new_r, new_c, origin_color, color);
+            }
+        }
+    }
+public:
+    vector<vector<int>> floodFill(vector<vector<int>>& image, int sr, int sc, int color) {
+        const int n = image.size();
+        if (n==0) {
+            return image;
+        }
+        const int m = image[0].size();
+        if (m==0) {
+            return image;
+        }
+
+        if(color == image[sr][sc]) {
+            return image;
+        }
+        
+        dfs(image, sr, sc, image[sr][sc], color);
+        return image;
+    }
+};
