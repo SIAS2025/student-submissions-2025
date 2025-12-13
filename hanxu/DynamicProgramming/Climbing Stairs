@@ -1,0 +1,46 @@
+class Solution {
+public:
+    int climbStairs(int n) {
+        // n = 2
+        // step 0: 1
+        // step 1: 1
+        // step 2: from step 0 + from step 1
+        // n = 4
+        // state 0: 1
+        // state 1: 1
+        // state 2: from step 0 + from step 1
+        // state 3: from step 1 + from step 2
+        // state 4: from step 2 + from step 3 
+        vector<int> state(n+1);//state: up to step i, how many distinct ways
+        // state i = state 
+        state[0] = 1;
+        for(int i=1;i<=n;++i) {
+            state[i] = state[i-1] + (i>=2?state[i-2]:0);
+        }
+        return state.back();
+    }
+};
+
+class Solution {
+    vector<int> _memo;
+    int dp(int n) {
+        if (n<0) {
+            return 0;
+        }
+        if(_memo[n]!=0) {
+            return _memo[n];
+        }
+        if(n==0) {
+            _memo[0] = 1;
+            return 1;
+        }
+
+        _memo[n] = dp(n-1) + dp(n-2);
+        return _memo[n];
+    }
+public:
+    int climbStairs(int n) {
+        _memo.resize(n+1, 0);
+        return dp(n);
+    }
+};
