@@ -1,0 +1,33 @@
+class Solution {
+    
+public:
+    int maximumScore(vector<int>& nums, vector<int>& multipliers) {
+        const int n = nums.size(), m = multipliers.size();
+        
+        // dp[i][j] : max score using left i nums, and right j nums, i+j = m -> one candidate for ans
+        // 1-index
+        vector<vector<int>>dp(m+1, vector<int>(m+1));
+        // dp[0][0] -> 0
+        // dp[i][0] -> max score using left most i nums * multipliers 
+        // dp[0][i] -> max score using right most i nums * multipliers
+        for(int i=1;i<=m;++i) {
+            dp[i][0] = dp[i-1][0] + multipliers[i-1] * nums[i-1];
+            dp[0][i] = dp[0][i-1] + multipliers[i-1] * nums[n-i];
+        }
+        
+        int ans = max(dp[0][m], dp[m][0]);
+        
+        for(int i=1;i<=m;++i) {
+            for(int j=1;i+j<=m;++j) {
+                // take i elements from left of nums, j elements from right of nums
+                // option 1: take i-1 elements from left + j elements from right + ith element from left 
+                // option 2: take i elements from left + j-1 elements from right + jth element from right, n-1-(j-1) 
+                dp[i][j] = max(dp[i-1][j] + multipliers[i+j-1]*nums[i-1], dp[i][j-1] + multipliers[i+j-1]*nums[n-j]);
+                if (i+j==m) {
+                    ans = max(ans, dp[i][j]);
+                }
+            }
+        }
+        return ans;
+    }
+};
