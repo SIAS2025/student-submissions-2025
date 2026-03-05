@@ -1,0 +1,32 @@
+class Solution {
+public:
+    // jobDifficulty = [11,111,22,222,33,333,44,444], d = 6
+    // [11, 111, 22, 222, 33, 444] = 777 + 66 = 843
+    int minDifficulty(vector<int>& jobDifficulty, int d) {
+        // dp[i][j] i: job index 1->n, j: day index 1->d
+        // sum of difficulty up to day j when proceed to job i
+        // jobDifficulty = [6,5,4,3,2,1], d = 2
+        // dp[1][1] = 6, dp[2][1] = max(dp[1][1], 5), dp[3][1] = max(dp[2][1], 4), dp[4][1] = max(dp[3][1], 3), ... dp[6][1] = max(dp[5][1], 1)
+        // dp[2][2] = min(dp[1][1] + 5), dp[3][2] = min(day 1:1, 2 + day 2: 3, day 1:1 + day 2: 2, 3) = min(dp[2][1] + 4, dp[1][1] + max(5， 4)), dp[4][2] = min(day 1: 1->3 + day2:4, day 1: 1->2, day2: 3->4, day1:1, day2: 2->4) = min(dp[3][1] + 3, dp[2][1] + max(4, 3), dp[1][1] + max(5, 4, 3))
+        // dp[i][j] = min(dp[k][j-1] + max(jobdifficulty[k+1, i]) for k [i-1, 1] )
+        const int n = jobDifficulty.size();
+        if (n < d) {
+            return -1;
+        }
+        vector<vector<int>> dp(n+1, vector<int>(d+1, 1001 * d));
+        dp[0][0] = 0;
+        for(int j=1;j<=d;++j) {
+            for(int i=1;i<=n;++i) {
+                int local_max_difficulty = jobDifficulty[i-1];
+                for(int k=i-1;k>=0;--k) {
+                    dp[i][j] = min(dp[i][j], dp[k][j-1] + local_max_difficulty);
+                    if (k > 0) {
+                        local_max_difficulty = max(local_max_difficulty, jobDifficulty[k-1]);
+                    }
+                }
+            }
+        }
+
+        return dp.back().back();
+    }
+};

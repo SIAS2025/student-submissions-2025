@@ -1,0 +1,20 @@
+class Solution {
+public:
+    int lengthOfLIS(vector<int>& nums) {
+        // dp[i] i-> longest ascending subarray length end by index i
+        // dp[i] = function (dp[j] j<i) = max(dp[j] + 1 if nums[i] > nums[j])
+        vector<int> dp(nums.size()+1, 1);
+        dp[0] = 0;
+        int ans = 1;
+        for(int i=1;i<= nums.size();++i) {
+            for(int j=1;j<i;++j) {
+                if (nums[j-1] >= nums[i-1]) {
+                    continue;
+                }
+                dp[i] = max(dp[i], dp[j]+1);
+            }
+            ans = max(ans, dp[i]);
+        }
+        return ans;
+    }
+};

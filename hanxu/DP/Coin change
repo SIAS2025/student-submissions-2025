@@ -1,0 +1,27 @@
+class Solution {
+public:
+    int coinChange(vector<int>& coins, int amount) {
+        // dp[i][j] i coin type chosen, j amount can get
+        // [2, 5]  11
+        // @cache
+        // int backtrack(amount, coins)
+        // dp[i] i -> amount
+        // dp[0] = 0, dp[1] = -1, dp[2] = 1, dp[3] = -1, dp[4] = 2, dp[5] =1
+        // dp[6] = min(dp[4] + 1)
+        // dp[7] = min(dp[5] + 1, dp[2] + 1)
+        // dp[i] = min(dp[i-coins[j]] + 1 for all j)
+        vector<int> dp(amount+1, INT_MAX);
+        dp[0] = 0;
+        for(int i=1;i<=amount;++i) {
+            for(auto &c:coins) {
+                if (i - c < 0 || dp[i-c]==-1 || dp[i-c]==INT_MAX) {
+                    continue;
+                }
+                dp[i] = min(dp[i-c]+1, dp[i]);
+                //cout<<dp[i-c]<<endl;
+            }
+            //cout<<"resolved: "<<dp[i]<<endl;
+        }
+        return dp.back()==INT_MAX?-1:dp.back();
+    }
+};

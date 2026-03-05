@@ -1,0 +1,25 @@
+class Solution {
+public:
+    bool wordBreak(string s, vector<string>& wordDict) {
+        // dp[i] i -> s index -> bool true or false if can use word dict to assemble string s[0:i]
+        // "leetcode" ["leet", "code"]
+        // dp[0] = false, dp[1] = false, dp[2] = false, dp[3] = true, dp[4] = false, dp[5] = false, dp[6] = false , dp[7] = true
+        // dp[i] = any true (dp[j] + str[j->i] in word dict) j <i
+        // 1 - index dp[0] = true
+        vector<int> dp(s.size()+1, false);
+        unordered_set<string> dict(wordDict.begin(), wordDict.end());
+        dp[0] = true;
+        for(int i=1;i<=s.size();++i) {
+            for(int j=0;j<i;++j) {
+                string seg = s.substr(j, i-j);
+                //cout<<seg<<" j: "<<j<<endl;
+                if (dp[j] && dict.count(seg)) {
+                    dp[i] = true;
+                    //cout<<dp[i]<<endl;
+                    break;
+                }
+            }
+        }
+        return dp.back();
+    }
+};
